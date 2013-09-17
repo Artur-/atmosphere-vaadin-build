@@ -16,6 +16,14 @@ public class VaadinAtmospherePreprocessor {
 		}
 	}
 
+	public static String getVersion() {
+		String version = System.getProperty("newVersion");
+		if (version == null) {
+			throw new IllegalArgumentException("Use -DnewVersion=%version%");
+		}
+		return version;
+	}
+
 	private void preprocess(File projectDir) throws Exception {
 		List<FileFilter> fileFilters = new ArrayList<FileFilter>();
 		List<XMLFileFilter> xmlFilters = new ArrayList<XMLFileFilter>();
@@ -30,7 +38,7 @@ public class VaadinAtmospherePreprocessor {
 		validationFilters.add(new SLF4JRemovalValidator(projectDir));
 
 		fileFilters.add(new SLF4JPackageReferenceUpdater(projectDir));
-
+		fileFilters.add(new JavascriptVersionUpdater(projectDir));
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 
 		Collection<File> files = listRecursively(projectDir);

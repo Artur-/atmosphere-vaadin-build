@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 
 public class SLF4JPackageReferenceUpdater extends JavaFileUpdater {
 
@@ -32,10 +31,9 @@ public class SLF4JPackageReferenceUpdater extends JavaFileUpdater {
 
 		reader.close();
 		if (needUpdate) {
-			FileWriter writer = new FileWriter(f);
-			writer.write(contents.toString());
-			writer.close();
+			writeFile(f, contents.toString());
 		}
 
 	}
+
 }

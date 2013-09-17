@@ -33,7 +33,8 @@ public class AtmosphereDependencyUpdater extends PomXmlFilter {
 		Element compatVersion = (Element) findNode(doc,
 				"/project/properties/compat-version");
 		if (compatVersion != null) {
-			compatVersion.setTextContent(System.getProperty("newVersion"));
+			compatVersion.setTextContent(VaadinAtmospherePreprocessor
+					.getVersion());
 		}
 
 		updateFile(f, doc);

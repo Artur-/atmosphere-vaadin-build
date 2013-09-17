@@ -1,11 +1,9 @@
 import java.io.File;
 
-public abstract class JavaFileUpdater implements FileFilter {
-
-	private File root;
+public abstract class JavaFileUpdater extends AbstractFileFilter {
 
 	public JavaFileUpdater(File root) {
-		this.root = root;
+		super(root);
 	}
 
 	@Override
