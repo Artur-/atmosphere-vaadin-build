@@ -13,6 +13,9 @@ public class GPGReleaseKeyReader extends RootPomXmlFilter {
 	public void process(File f, Document doc) throws Exception {
 		Element profileNode = (Element) findNode(doc,
 				"/project/profiles/profile/id[text()='release-sign-artifacts']/..");
+		if (profileNode == null) {
+			return;
+		}
 		Element pluginsNode = (Element) findNode(profileNode, "build/plugins");
 		Element plugin = doc.createElement("plugin");
 		Element groupId = doc.createElement("groupId");
@@ -65,7 +68,7 @@ public class GPGReleaseKeyReader extends RootPomXmlFilter {
 		// <files>
 		// <file>${gpg.passphrase.file}</file></files></configuration></execution></executions></plugin>
 		pluginsNode.appendChild(plugin);
-		
+
 		updateFile(f, doc);
 	}
 }
