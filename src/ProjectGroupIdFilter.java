@@ -8,11 +8,11 @@ import org.w3c.dom.Element;
  * com.vaadin.external.atmosphered
  * 
  */
-public class GroupIdFilter extends PomXmlFilter {
+public class ProjectGroupIdFilter extends PomXmlFilter {
 
-	private static final String GROUP_ID_PREFIX = "com.vaadin.external.atmosphere";
+	public static final String GROUP_ID_PREFIX = "com.vaadin.external.atmosphere";
 
-	public GroupIdFilter(File root) {
+	public ProjectGroupIdFilter(File root) {
 		super(root);
 	}
 
@@ -25,6 +25,10 @@ public class GroupIdFilter extends PomXmlFilter {
 	}
 
 	private void updateGroupId(Element e) {
+		if (e == null) {
+			return;
+		}
+
 		String groupId = e.getTextContent();
 		if (!"org.atmosphere".equals(groupId)
 				&& !GROUP_ID_PREFIX.equals(groupId)) {

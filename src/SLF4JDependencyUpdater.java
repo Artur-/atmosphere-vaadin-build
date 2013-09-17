@@ -38,8 +38,8 @@ public class SLF4JDependencyUpdater extends PomXmlFilter {
 			if (groupIdText.equals("org.slf4j")) {
 				addDependencyIfNotPresent(doc, VAADIN_SLF4J_GROUPID,
 						"vaadin-slf4j-jdk14", "${slf4j-impl-version}");
-				addDependencyIfNotPresent(doc, VAADIN_SLF4J_GROUPID,
-						"slf4j-api", "${slf4j-version}");
+				// addDependencyIfNotPresent(doc, VAADIN_SLF4J_GROUPID,
+				// "slf4j-api", "${slf4j-version}");
 
 				dependency.getParentNode().removeChild(dependency);
 			}
