@@ -11,10 +11,22 @@ public class GPGReleaseKeyReader extends RootPomXmlFilter {
 
 	@Override
 	public void process(File f, Document doc) throws Exception {
-		Element profileNode = (Element) findNode(doc,
-				"/project/profiles/profile/id[text()='release-sign-artifacts']/..");
+		Element profiles = (Element) findNode(doc, "/project/profiles");
+		if (profiles == null) {
+			profiles = doc.createElement("profiles");
+			((Element) findNode(doc, "/project")).appendChild(profiles);
+		}
+		Element profileNode = (Element) findNode(profiles,
+				"profile/id[text()='release-sign-artifacts']/..");
 		if (profileNode == null) {
-			return;
+			profileNode = doc.createElement("profile");
+			Element profileId = doc.createElement("id");
+			profileId.setTextContent("release-sign-artifacts");
+			profileNode.appendChild(profileId);
+			profiles.appendChild(profileNode);
+			Element buildElement = doc.createElement("build");
+			profileNode.appendChild(buildElement);
+			buildElement.appendChild(doc.createElement("plugins"));
 		}
 		Element pluginsNode = (Element) findNode(profileNode, "build/plugins");
 		Element plugin = doc.createElement("plugin");
