@@ -18,17 +18,39 @@ public class GPGReleaseKeyReader extends RootPomXmlFilter {
 		}
 		Element profileNode = (Element) findNode(profiles,
 				"profile/id[text()='release-sign-artifacts']/..");
+		boolean newProfile = false;
 		if (profileNode == null) {
-			profileNode = doc.createElement("profile");
-			Element profileId = doc.createElement("id");
-			profileId.setTextContent("release-sign-artifacts");
-			profileNode.appendChild(profileId);
-			profiles.appendChild(profileNode);
-			Element buildElement = doc.createElement("build");
-			profileNode.appendChild(buildElement);
-			buildElement.appendChild(doc.createElement("plugins"));
+			newProfile = true;
+			profileNode = createReleaseProfile(doc, profiles);
 		}
+
 		Element pluginsNode = (Element) findNode(profileNode, "build/plugins");
+		Element plugin = createPlugin(doc, pluginsNode, "org.codehaus.mojo",
+				"properties-maven-plugin", "1.0-alpha-2", "initialize",
+				"read-project-properties");
+
+		Element execution = (Element) findNode(plugin, "executions/execution");
+		Element configuration = doc.createElement("configuration");
+		Element files = doc.createElement("files");
+		Element file = doc.createElement("file");
+		file.setTextContent("${gpg.passphrase.file}");
+		configuration.appendChild(files);
+		files.appendChild(file);
+		execution.appendChild(configuration);
+
+		pluginsNode.appendChild(plugin);
+		if (newProfile) {
+			Element gpgPlugin = createPlugin(doc, pluginsNode,
+					"org.apache.maven.plugins", "maven-gpg-plugin", "1.1",
+					"verify", "sign");
+			pluginsNode.appendChild(gpgPlugin);
+		}
+		updateFile(f, doc);
+	}
+
+	private Element createPlugin(Document doc, Element pluginsNode,
+			String groupIdText, String artifactIdText, String versionText,
+			String phaseText, String goalText) {
 		Element plugin = doc.createElement("plugin");
 		Element groupId = doc.createElement("groupId");
 		Element version = doc.createElement("version");
@@ -39,48 +61,37 @@ public class GPGReleaseKeyReader extends RootPomXmlFilter {
 		Element phase = doc.createElement("phase");
 		Element goals = doc.createElement("goals");
 		Element goal = doc.createElement("goal");
-		Element configuration = doc.createElement("configuration");
-		Element files = doc.createElement("files");
-		Element file = doc.createElement("file");
 
-		groupId.setTextContent("org.codehaus.mojo");
-		artifactId.setTextContent("properties-maven-plugin");
-		version.setTextContent("1.0-alpha-2");
+		groupId.setTextContent(groupIdText);
+		artifactId.setTextContent(artifactIdText);
+		version.setTextContent(versionText);
 
-		phase.setTextContent("initialize");
-		goal.setTextContent("read-project-properties");
-
-		file.setTextContent("${gpg.passphrase.file}");
+		phase.setTextContent(phaseText);
+		goal.setTextContent(goalText);
 
 		goals.appendChild(goal);
-
-		configuration.appendChild(files);
-		files.appendChild(file);
 
 		executions.appendChild(execution);
 		execution.appendChild(phase);
 		execution.appendChild(goals);
-		execution.appendChild(configuration);
 
 		plugin.appendChild(groupId);
 		plugin.appendChild(artifactId);
 		plugin.appendChild(version);
 		plugin.appendChild(executions);
-		// <plugin>
-		// <groupId>org.codehaus.mojo</groupId>
-		// <artifactId>properties-maven-plugin</artifactId>
-		// <version>1.0-alpha-2</version>
-		// <executions>
-		// <execution>
-		// <phase>initialize</phase>
-		// <goals>
-		// <goal>read-project-properties</goal>
-		// </goals>
-		// <configuration>
-		// <files>
-		// <file>${gpg.passphrase.file}</file></files></configuration></execution></executions></plugin>
-		pluginsNode.appendChild(plugin);
 
-		updateFile(f, doc);
+		return plugin;
+	}
+
+	private Element createReleaseProfile(Document doc, Element profiles) {
+		Element profileNode = doc.createElement("profile");
+		Element profileId = doc.createElement("id");
+		profileId.setTextContent("release-sign-artifacts");
+		profileNode.appendChild(profileId);
+		profiles.appendChild(profileNode);
+		Element buildElement = doc.createElement("build");
+		profileNode.appendChild(buildElement);
+		buildElement.appendChild(doc.createElement("plugins"));
+		return profileNode;
 	}
 }
