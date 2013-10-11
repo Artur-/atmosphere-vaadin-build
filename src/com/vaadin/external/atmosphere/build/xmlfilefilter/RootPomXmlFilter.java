@@ -1,3 +1,4 @@
+package com.vaadin.external.atmosphere.build.xmlfilefilter;
 import java.io.File;
 
 public abstract class RootPomXmlFilter extends PomXmlFilter {

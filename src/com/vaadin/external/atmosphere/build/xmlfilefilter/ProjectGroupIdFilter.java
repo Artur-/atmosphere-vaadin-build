@@ -1,3 +1,4 @@
+package com.vaadin.external.atmosphere.build.xmlfilefilter;
 import java.io.File;
 
 import org.w3c.dom.Document;

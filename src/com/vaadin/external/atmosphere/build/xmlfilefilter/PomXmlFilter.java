@@ -1,3 +1,4 @@
+package com.vaadin.external.atmosphere.build.xmlfilefilter;
 import java.io.File;
 
 import javax.xml.namespace.QName;

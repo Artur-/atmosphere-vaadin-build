@@ -1,3 +1,5 @@
+package com.vaadin.external.atmosphere.build;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -9,19 +11,22 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Document;
 
+import com.vaadin.external.atmosphere.build.filefilter.FileFilter;
+import com.vaadin.external.atmosphere.build.filefilter.JavascriptVersionUpdater;
+import com.vaadin.external.atmosphere.build.filefilter.SLF4JPackageReferenceUpdater;
+import com.vaadin.external.atmosphere.build.xmlfilefilter.AtmosphereDependencyUpdater;
+import com.vaadin.external.atmosphere.build.xmlfilefilter.DistributionManagementFilter;
+import com.vaadin.external.atmosphere.build.xmlfilefilter.GPGReleaseKeyReader;
+import com.vaadin.external.atmosphere.build.xmlfilefilter.ProjectGroupIdFilter;
+import com.vaadin.external.atmosphere.build.xmlfilefilter.SLF4JDependencyUpdater;
+import com.vaadin.external.atmosphere.build.xmlfilefilter.SLF4JRemovalValidator;
+import com.vaadin.external.atmosphere.build.xmlfilefilter.XMLFileFilter;
+
 public class VaadinAtmospherePreprocessor {
 	public static void main(String[] args) throws Exception {
 		for (String dir : args) {
 			new VaadinAtmospherePreprocessor().preprocess(new File(dir));
 		}
-	}
-
-	public static String getVersion() {
-		String version = System.getProperty("newVersion");
-		if (version == null) {
-			throw new IllegalArgumentException("Use -DnewVersion=%version%");
-		}
-		return version;
 	}
 
 	private void preprocess(File projectDir) throws Exception {
@@ -90,20 +95,7 @@ public class VaadinAtmospherePreprocessor {
 				found.add(f);
 			}
 		}
-
-		return found;
-
-	}
-
-	private Collection<File> findFiles(String filename, File dir) {
-		Collection<File> found = new ArrayList<File>();
-		for (File f : dir.listFiles()) {
-			if (f.isDirectory()) {
-				found.addAll(findFiles(filename, f));
-			} else if (f.getName().equals(filename)) {
-				found.add(f);
-			}
-		}
 		return found;
 	}
+
 }

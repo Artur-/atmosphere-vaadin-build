@@ -1,3 +1,5 @@
+package com.vaadin.external.atmosphere.build.xmlfilefilter;
+
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
@@ -31,15 +33,10 @@ public class SLF4JDependencyUpdater extends PomXmlFilter {
 			Element dependency = (Element) dependencyNodes.item(i);
 			Element groupId = (Element) findNode(dependency, "groupId");
 			String groupIdText = groupId.getTextContent();
-			// String artifactId = ((Element) findNode(dependency,
-			// "artifactId"))
-			// .getTextContent();
 
 			if (groupIdText.equals("org.slf4j")) {
 				addDependencyIfNotPresent(doc, VAADIN_SLF4J_GROUPID,
 						"vaadin-slf4j-jdk14", "${slf4j-impl-version}");
-				// addDependencyIfNotPresent(doc, VAADIN_SLF4J_GROUPID,
-				// "slf4j-api", "${slf4j-version}");
 
 				dependency.getParentNode().removeChild(dependency);
 			}
@@ -55,10 +52,7 @@ public class SLF4JDependencyUpdater extends PomXmlFilter {
 						+ artifactId + "']/../groupId[text()='" + groupid
 						+ "']");
 		if (e != null) {
-			// NodeList artifactNode = findNode(e, "../);
-			// if (artifactNode != null) {
 			return;
-			// }
 		}
 
 		addDependency(doc, groupid, artifactId, version);

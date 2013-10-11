@@ -1,8 +1,12 @@
+package com.vaadin.external.atmosphere.build.xmlfilefilter;
+
 import java.io.File;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
+import com.vaadin.external.atmosphere.build.Version;
 
 /**
  * Updates org.atmosphere / xyz dependencies to com.vaadin.external.atmosphere
@@ -25,16 +29,10 @@ public class AtmosphereDependencyUpdater extends PomXmlFilter {
 		}
 
 		// Internal dependencies
-
-		// Element clientVersion = (Element)
-		// findNode(doc,"/project/properties/client-version");
-		// clientVersion.setTextContent("2.0.2");
-
 		Element compatVersion = (Element) findNode(doc,
 				"/project/properties/compat-version");
 		if (compatVersion != null) {
-			compatVersion.setTextContent(VaadinAtmospherePreprocessor
-					.getVersion());
+			compatVersion.setTextContent(Version.getVersion());
 		}
 
 		updateFile(f, doc);

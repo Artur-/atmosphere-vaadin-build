@@ -1,5 +1,9 @@
+package com.vaadin.external.atmosphere.build.filefilter;
+
 import java.io.File;
 import java.io.IOException;
+
+import com.vaadin.external.atmosphere.build.Version;
 
 public class JavascriptVersionUpdater extends AbstractFileFilter {
 
@@ -15,13 +19,11 @@ public class JavascriptVersionUpdater extends AbstractFileFilter {
 	@Override
 	public void process(File f) throws Exception {
 		String from = "var version = \".*-javascript\"";
-		String to = "var version = \""
-				+ VaadinAtmospherePreprocessor.getVersion() + "-javascript\"";
+		String to = "var version = \"" + Version.getVersion() + "-javascript\"";
 
 		replace(f, from, to);
 		String from2 = "version: \".*-jquery\"";
-		String to2 = "version: \"" + VaadinAtmospherePreprocessor.getVersion()
-				+ "-jquery\"";
+		String to2 = "version: \"" + Version.getVersion() + "-jquery\"";
 
 		String contents = readFile(f);
 		contents = contents.replaceAll(from, to);
